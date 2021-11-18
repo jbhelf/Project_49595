@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="jumbotron text-center">
+      <h1 class="display-3">User Page of {{user_id}} !</h1>
+    </div>
+    <h3>Create Post</h3>
+    <form action="/{{hashcode}}/create" method="POST" id="register">
+      <input type="submit" value="Create Post" />
+    </form>
+    <h1>Posts</h1>
+    <table>
+      {% for post_id, post in data.items() | reverse %}
+      <tr>
+        <td><strong>{{ post['post_title'] }}</strong></td>
+        <!-- <td>{{post}}</td> -->
+        <!-- {% for i in posts %}
+          <td>{{i}}</td>
+          {%endfor%} -->
+        {% if post_id != 0%}
+        <!-- <td>{{ post['post_id'] }}</td> -->
+        <td>
+          <small><i>{{ post['post_timestamp'] }}</i></small>
+        </td>
+        <!-- <td>{{ post['poster_user_id'] }}</td> -->
+        <!-- <td>{{ post['post_title'] }}</td> -->
+        <td>{{ post['post_content'] }}</td>
+        <td>
+          <small><i>vote_count:</i></small> {{ post['vote_counter'] }}
+        </td>
+        {%endif%}
+      </tr>
+      {%endfor%}
+    </table>
+  </body>
+</html>

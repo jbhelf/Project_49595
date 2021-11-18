@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("create").submit(function () {
+          $("create").post("/{{hashcode}}/create_submit", {
+            first_name: "Evan",
+            last_name: "Border",
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Create</h1>
+    <form action="/{{hashcode}}/create_submit" method="POST" id="create">
+      <label for="post_title">Post Title:</label>
+      <input type="text" id="post_title" name="post_title" /><br /><br />
+      <label for="post_content">Post Content:</label>
+      <input type="text" id="post_content" name="post_content" /><br /><br />
+      <input type="submit" value="Post" />
+    </form>
+
+    <p>Click on the submit button to submit".</p>
+  </body>
+</html>
