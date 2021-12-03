@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="jumbotron text-center">
+      <!-- <h1 class="display-3">User Page of {{user_id}} !</h1> -->
+    </div>
+    <!-- 
+  
+  USER PAGE->DELETE->API->USER PAGE
+
+-->
+
+    <h3>Are you sure you would like to delete this post?</h3>
+    <form
+      action="/{{hashcode}}/yesDelete/{{post_id}}"
+      method="GET"
+      id="register"
+    >
+      <input type="submit" value="Yes" />
+    </form>
+    <form action="/{{hashcode}}/userpage" method="GET" id="register">
+      <input type="submit" value="No" />
+    </form>
+  </body>
+</html>

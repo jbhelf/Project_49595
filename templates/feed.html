@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+
+    <script>
+      function upVote() {
+        count = document.getElementById("vote_count");
+        var newval = +count.innerHTML + 1;
+        count.innerHTML = newval;
+      }
+
+      function downVote() {
+        count = document.getElementById("vote_count");
+        var newval = +count.innerHTML - 1;
+        count.innerHTML = newval;
+      }
+    </script>
+
+    <style>
+      .topright {
+        position: absolute;
+        top: 8px;
+        right: 16px;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <form action="/{{hashcode}}/feed/0" method="GET" id="register">
+    <input type="submit" value="¯\_(ツ)_/¯" />
+  </form>
+  <form action="/{{hashcode}}/downloadDB" method="GET" id="register">
+    <input type="submit" value="Download DB" />
+  </form>
+  <form action="/{{hashcode}}/userpage" method="GET" id="register">
+    <input type="submit" value="User Homepage {{ user_id }}" class="topright" />
+  </form>
+  <body>
+    <div class="jumbotron text-center">
+      <!-- <h1 class="display-3">User Page of {{user_id}} !</h1> -->
+    </div>
+    <h1>Community Posts</h1>
+    <table>
+      {% for post_id, post in data.items() | reverse %}
+      <tr>
+        <td>
+          <form
+            action="/posts/{{ post['post_id'] }}"
+            method="GET"
+            id="register"
+          >
+            <input type="submit" value="{{ post['post_id'] }}" />
+          </form>
+        </td>
+        <td><strong>{{ post['post_title'] }}</strong></td>
+        <td>
+          <small>
+            <strong><i>{{ post['poster_user_id'] }}</i></strong>
+          </small>
+        </td>
+        <td>
+          <small><i>{{ post['post_timestamp'] }}</i></small>
+        </td>
+        <td>{{ post['post_content'] }}</td>
+        <td>
+          <small><i>vote_count:</i></small>
+          <i id="vote_count">{{ post['vote_counter'] }}</i>
+        </td>
+        <td>
+          <form>
+            <input onclick="upVote()" type="button" value="+" />
+          </form>
+        </td>
+        <td>
+          <form>
+            <input onclick="downVote()" type="button" value="-" />
+          </form>
+        </td>
+      </tr>
+      {%endfor%}
+    </table>
+  </body>
+</html>
