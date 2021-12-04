@@ -8,7 +8,7 @@ CREATE TABLE users (
 
 CREATE TABLE posts (
     post_id int primary key NOT NULL,
-    post_timestamp text NOT NULL,
+    post_timestamp int NOT NULL,
     poster_user_id text NOT NULL,
     post_title text NOT NULL,
     post_content text NOT NULL,

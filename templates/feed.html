@@ -10,13 +10,26 @@
     <script>
       function upVote() {
         count = document.getElementById("vote_count");
-        var newval = +count.innerHTML + 1;
+        if(document.getElementById("downvote").disabled == true){ //if the use already downvoted
+          var newval = +count.innerHTML + 2;
+        }else{
+          var newval = +count.innerHTML + 1;
+        }
+        document.getElementById("upvote").disabled = true
+        document.getElementById("downvote").disabled = false
+        // var newval = +count.innerHTML + 1;
         count.innerHTML = newval;
       }
 
       function downVote() {
         count = document.getElementById("vote_count");
-        var newval = +count.innerHTML - 1;
+        if(document.getElementById("upvote").disabled == true){ //if the use already upvoted
+          var newval = +count.innerHTML - 2;
+        }else{
+          var newval = +count.innerHTML - 1;
+        }
+        document.getElementById("downvote").disabled = true
+        document.getElementById("upvote").disabled = false
         count.innerHTML = newval;
       }
     </script>
@@ -72,16 +85,22 @@
         </td>
         <td>
           <form>
-            <input onclick="upVote()" type="button" value="+" />
+            <input onclick="upVote()" type="button" value="+" id="upvote"/>
           </form>
         </td>
         <td>
           <form>
-            <input onclick="downVote()" type="button" value="-" />
+            <input onclick="downVote()" type="button" value="-" id="downvote"/>
           </form>
         </td>
       </tr>
       {%endfor%}
     </table>
+    <form action="/{{hashcode}}/feed/{{ pagenum + 1}}" method="GET" id="register">
+      <input type="submit" value="Next Page"/>
+    </form>
+    <form action="/{{hashcode}}/feed/{{ pagenum - 1}}" method="GET" id="register">
+      <input type="submit" value="Previous Page"/>
+    </form>
   </body>
 </html>

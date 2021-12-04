@@ -4,7 +4,6 @@ import time
 import csv
 
 app = flask.Flask(__name__)
-ROWS_PER_PAGE = 5
 
 
 @app.route("/<hashcode>/downloadDB", methods=['GET'])
@@ -18,7 +17,6 @@ def downloadDB(hashcode):
     con.commit()
     con.close() 
     return flask.render_template("thankYou.html", hashcode = hashcode, reason = "downloading the database")
-
 
 @app.route("/<hashcode>/deleteConfirmation/<post_id>", methods=['GET'])
 def deleteConfirm(hashcode, post_id):
@@ -39,7 +37,12 @@ def yesDelete(hashcode, post_id):
     for i in posts:
         cont = {}
         cont["post_id"] = i[0]
-        cont["post_timestamp"] = i[1]
+        mins_difference = int((int(time.time()) - i[1]) // 60)
+
+        if(mins_difference <= 30):
+            cont["post_timestamp"] = str(mins_difference) + " minutes ago!"
+        else:
+            cont["post_timestamp"] = str(1+mins_difference//60) + " hours ago!"
         cont["poster_user_id"] = i[2]
         cont["post_title"] = i[3]
         cont["post_content"] = i[4]
@@ -54,7 +57,6 @@ def yesDelete(hashcode, post_id):
 def updatePost(hashcode, post_id):
     return flask.render_template("updatePost.html", post_id=post_id, hashcode = hashcode)
 
-
 @app.route("/posts/<postid>", methods=['GET'])
 def show_post(post_id):
     con = sqlite3.connect('database.db')
@@ -66,7 +68,12 @@ def show_post(post_id):
     for i in post:
             cont = {}
             cont["post_id"] = i[0]
-            cont["post_timestamp"] = i[1]
+            mins_difference = int((int(time.time()) - i[1]) // 60)
+
+            if(mins_difference <= 30):
+                cont["post_timestamp"] = str(mins_difference) + " minutes ago!"
+            else:
+                cont["post_timestamp"] = str(1+mins_difference//60) + " hours ago!"
             cont["poster_user_id"] = i[2]
             cont["post_title"] = i[3]
             cont["post_content"] = i[4]
@@ -86,12 +93,18 @@ def show_userpage(hashcode):
     posts = c.execute("SELECT * from posts where poster_user_id = ?", (user_id,)).fetchall()    
 
     # page = flask.request.args.get('page', 1, type=int)
-    print(user_id)
+    # print(user_id)
     data = {}
     for i in posts:
         cont = {}
         cont["post_id"] = i[0]
-        cont["post_timestamp"] = i[1]
+
+        mins_difference = int((int(time.time()) - i[1]) // 60)
+
+        if(mins_difference <= 30):
+            cont["post_timestamp"] = str(mins_difference) + " minutes ago!"
+        else:
+            cont["post_timestamp"] = str(1+mins_difference//60) + " hours ago!"
         cont["poster_user_id"] = i[2]
         cont["post_title"] = i[3]
         cont["post_content"] = i[4]
@@ -143,11 +156,21 @@ def feedPage(hashcode, pagenum):
     # page = flask.request.args.get('page', 1, type=int)
     
     data = {}
+    pagenum = int(pagenum)
+    if pagenum < 0:
+        pagenum = 0
     for i in posts:
-        if i[2] != user_id:
+        # print(i[0], type(i[0]))
+        # print(pagenum, type(pagenum))
+        if (i[2] != user_id) and ((i[0] >= (5*pagenum)) and (i[0] < (5*(pagenum+1)))):
             cont = {}
             cont["post_id"] = i[0]
-            cont["post_timestamp"] = i[1]
+            mins_difference = int((int(time.time()) - i[1]) // 60)
+
+            if(mins_difference <= 30):
+                cont["post_timestamp"] = str(mins_difference) + " minutes ago!"
+            else:
+                cont["post_timestamp"] = str(1+mins_difference//60) + " hours ago!"
             cont["poster_user_id"] = i[2]
             cont["post_title"] = i[3]
             cont["post_content"] = i[4]
@@ -174,7 +197,7 @@ def register_submit():
     # if(c.execute("SELECT EXISTS(SELECT * FROM users WHERE hashcode=(?)", (h,)) == None):
     if not e:
         c.execute("INSERT INTO users VALUES (?, ?, ?, ?)", (u,h,p,0))
-        c.execute("INSERT INTO posts VALUES (?, ?, ?, ?, ?, ?)", (get_latest_post_id(con, c) + 1,time.ctime(),u,"User's first Post!","Hello World!",0))
+        c.execute("INSERT INTO posts VALUES (?, ?, ?, ?, ?, ?)", (get_latest_post_id(con, c) + 1,int(time.time()),u,"User's first Post!","Hello World!",0))
     con.commit()
     con.close()
     return flask.render_template('thankYou.html', hashcode = h, reason = "logging in")
@@ -196,7 +219,7 @@ def create_submit(hashcode):
     # l = int(e[0][3])
     # l += 1
     l = get_latest_post_id(con, c) + 1
-    t = time.ctime()
+    t = int(time.time())
     #(post_id, post_timestamp, poster_user_id, post_title, post_content, vote_counter)
     c.execute("INSERT INTO posts VALUES (?, ?, ?, ?, ?, ?)", (l,t,u,pt,pc,0))
     c.execute("UPDATE users SET last_post_id = ? WHERE hashcode = ?", (l, hashcode))
@@ -205,7 +228,12 @@ def create_submit(hashcode):
     for i in p:
         cont = {}
         cont["post_id"] = i[0]
-        cont["post_timestamp"] = i[1]
+        mins_difference = int((int(time.time()) - i[1]) // 60)
+
+        if(mins_difference <= 30):
+            cont["post_timestamp"] = str(mins_difference) + " minutes ago!"
+        else:
+            cont["post_timestamp"] = str(1+mins_difference//60) + " hours ago!"
         cont["poster_user_id"] = i[2]
         cont["post_title"] = i[3]
         cont["post_content"] = i[4]
